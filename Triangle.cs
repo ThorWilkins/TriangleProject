@@ -150,28 +150,9 @@ namespace FinalFinalTriangleProject
         
         public void DisplayTriangle()
         {
-            string fileName = "text.txt";
-            //Command that gets the current date
-            DateTime today = DateTime.Today;
-            ClassifyTriangle();
-            CalculatePerimeter();
-            CalculateArea();
-            string[] triangleInformation = new String[4];
-            triangleInformation[0] = $"This triangle was made {today.ToString("dd/MM/yyyy")}";
-            triangleInformation[1] = $"Ths sides of the triangle are the following A = {sideA} B = {sideB} C = {sideC}";
-            triangleInformation[2] = $"The perimeter of this triangle is {perimeter.ToString("0.##")} and the area is {area.ToString("0.##")}";
-            triangleInformation[3] = $"This triangle is {triangleType}";
-            File.WriteAllLines(fileName, triangleInformation);
+            
         }
 
-        public void ReadFile()
-        {
-            string fileName = "text.txt";
-            string[] lines = File.ReadAllLines(fileName);
-            foreach (string line in lines)
-            {
-                Console.WriteLine(line);
-            }
-        }
+       
     }
 }

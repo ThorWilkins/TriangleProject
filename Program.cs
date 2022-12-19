@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Security.Policy;
+using System.Reflection.Emit;
 
 namespace FinalFinalTriangleProject
 {
@@ -17,7 +18,13 @@ namespace FinalFinalTriangleProject
 
         static void Main(string[] args)
         {
-            Triangle triangle = new Triangle();
+            Console.Title = "Triangle Program";
+            Triangle triangle = null;
+
+            bool isValid;
+            string fileName = "TriangleInformation.txt";
+            
+
 
             //Welcomes the user
             Console.WriteLine("Welcome to my triangle program!");
@@ -26,11 +33,6 @@ namespace FinalFinalTriangleProject
             //Using a blank statement to create a line gap
             Console.WriteLine("");
 
-            if(triangle.SideA == 0 || triangle.SideB == 0 || triangle.SideC == 0)
-            {
-                Console.WriteLine("automatically creating a new triangle since you dont have one already");
-                triangle.ValidateInput();
-            }
 
             do
             {
@@ -58,30 +60,64 @@ namespace FinalFinalTriangleProject
                     case 1:
                         triangle = new Triangle();
                         Console.Clear();
-                        triangle.ValidateInput();
+                        do
+                        {
+                            triangle.ValidateInput();
+                            isValid = triangle.IsValidTriangle();
+                        }
+                        while (!isValid);
                         break;
                     case 2:
                         Console.Clear();
-                        if (triangle.SideA != 0 || triangle.SideB != 0 || triangle.SideC != 0)
+                        if (triangle != null)
                         {
                             Console.WriteLine($"The perimeter of this triangle is {triangle.CalculatePerimeter()} and the area is {triangle.CalculateArea()}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("You dont have a triangle please create a triangle!");
                         }
                         break;
                     case 3:
                         Console.Clear();
-                        Console.WriteLine($"This triangle is {triangle.ClassifyTriangle()}");
+                        if (triangle != null)
+                        {
+                            Console.WriteLine($"This triangle is {triangle.ClassifyTriangle()}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("You dont have a triangle please create a triangle!");
+                        }
                         break;
                     case 4:
                         Console.Clear();
                         triangle = new Triangle();
                         break;
                     case 5:
-                        triangle.DisplayTriangle();
-                        Console.Clear();
+                        using (StreamWriter sWriter = File.AppendText(fileName))
+                        {
+                            if (triangle != null)
+                            {
+                                DateTime today = DateTime.Now;
+                                sWriter.WriteLine($"This triangle was made {today.ToString("dd/MM/yyyy")}");
+                                sWriter.WriteLine($"The three sides of the triangle are the following A = {triangle.SideA} B = {triangle.SideB} C = {triangle.SideC}");
+                                sWriter.WriteLine($"This triangle is {triangle.ClassifyTriangle()}");
+                                sWriter.WriteLine($"The perimeter of this triangle is {triangle.CalculatePerimeter()} and the area is {triangle.CalculateArea()}");
+                                sWriter.WriteLine("These calculations were done in The Triangle Program");
+                                sWriter.Close(); // Close the file
+                            }
+                            else
+                            {
+                                Console.WriteLine("You dont have a triangle please create a triangle!");
+                            }
+                        }
                         break;
                     case 6:
-                        Console.Clear();
-                        triangle.ReadFile();
+                        using (StreamReader readText = new StreamReader(fileName))
+                        {
+                            string text = readText.ReadToEnd();
+                            Console.WriteLine(text);
+                        }
                         break;
                     case 7:
                         Environment.Exit(0);
